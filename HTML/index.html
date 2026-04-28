@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carla Cervantes — Multimedia & Authoring</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #ff6eb4;
+    --pink-light: #ffb3d9;
+    --pink-dim: rgba(255,110,180,0.5);
+    --pink-faint: rgba(255,110,180,0.08);
+    --bg: #0d0009;
+    --bg-hover: #170010;
+    --text: #f2e8f0;
+    --text-muted: rgba(242,232,240,0.45);
+    --text-dim: rgba(242,232,240,0.2);
+    --border: rgba(255,100,180,0.15);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+  /* NAV */
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 1.4rem 3rem; border-bottom: 0.5px solid var(--border); position: sticky; top: 0; background: rgba(13,0,9,0.93); backdrop-filter: blur(14px); z-index: 200; }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.05rem; letter-spacing: 0.04em; color: var(--text); cursor: pointer; background: none; border: none; }
+  .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+  .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.13em; text-transform: uppercase; transition: color 0.2s; cursor: pointer; }
+  .nav-links a:hover, .nav-links a.active { color: var(--pink); }
+
+  /* PAGES */
+  .page { display: none; animation: fadeIn 0.45s ease both; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes drift { 0% { transform: translateY(0); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0); } }
+
+  /* HOME */
+  .home-bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse 80% 60% at 70% 20%, rgba(255,80,160,0.18) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 20% 80%, rgba(200,40,120,0.12) 0%, transparent 55%), #0d0009; pointer-events: none; opacity: 1; transition: opacity 0.4s; }
+  .home-bg.hidden { opacity: 0; }
+  .solar-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 0.4s; overflow: hidden; }
+  .solar-bg.visible { opacity: 1; }
+  .solar-bg canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .roto-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 0.4s; }
+  .roto-bg.visible { opacity: 1; }
+
+  .home-hero { position: relative; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; padding: 6rem 3rem 4rem; max-width: 1100px; margin: 0 auto; }
+  .hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--pink); margin-bottom: 1.4rem; animation: fadeUp 0.6s 0.05s ease both; }
+  .home-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(3.2rem, 7.5vw, 5.8rem); line-height: 1.07; font-weight: 700; color: #fce8f3; margin-bottom: 1.5rem; animation: fadeUp 0.8s 0.15s ease both; }
+  .home-hero h1 em { font-style: italic; color: var(--pink); }
+  .hero-desc { font-size: 1rem; color: var(--text-muted); max-width: 500px; line-height: 1.8; font-weight: 300; margin-bottom: 2.8rem; animation: fadeUp 0.7s 0.3s ease both; }
+  .hero-cta { display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.85rem 2rem; border: 0.5px solid var(--pink-dim); color: var(--pink); font-size: 0.78rem; letter-spacing: 0.13em; text-transform: uppercase; transition: all 0.25s; background: transparent; cursor: pointer; animation: fadeUp 0.6s 0.45s ease both; font-family: 'DM Sans', sans-serif; }
+  .hero-cta:hover { background: var(--pink-faint); border-color: var(--pink); }
+  .hero-deco-line { position: absolute; right: 3rem; top: 6rem; width: 1px; height: 200px; background: linear-gradient(to bottom, transparent, rgba(255,110,180,0.3), transparent); }
+
+  .definitions { max-width: 1100px; margin: 0 auto 5rem; padding: 0 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .def-block { position: relative; padding: 2.5rem 2.5rem 2.5rem 2rem; background: linear-gradient(135deg, rgba(255,110,180,0.07) 0%, rgba(13,0,9,0) 60%); border: 0.5px solid rgba(255,110,180,0.2); border-top: 2px solid var(--pink); overflow: hidden; }
+  .def-block::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(255,110,180,0.1) 0%, transparent 70%); pointer-events: none; }
+  .def-heading { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--pink-light); margin-bottom: 1rem; line-height: 1.2; }
+  .def-heading em { font-style: italic; color: var(--pink); }
+  .def-block p.def-body { font-family: 'Times New Roman', Times, serif; font-size: 0.97rem; color: var(--pink-light); line-height: 1.85; font-weight: 400; }
+
+  .projects-section { max-width: 1100px; margin: 0 auto 6rem; padding: 0 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 2.5rem; border-bottom: 0.5px solid var(--border); padding-bottom: 1rem; }
+  .section-label { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); }
+  .section-count { font-family: 'Playfair Display', serif; font-size: 0.88rem; color: rgba(242,232,240,0.13); font-style: italic; }
+  .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px; background: rgba(255,100,180,0.07); }
+  .project-card { background: var(--bg); padding: 2.5rem; position: relative; overflow: hidden; transition: background 0.3s; cursor: pointer; display: block; border: none; text-align: left; color: inherit; font-family: inherit; width: 100%; }
+  .project-card:hover { background: var(--bg-hover); }
+  .project-card:hover .card-arrow { transform: translate(4px,-4px); opacity: 1; }
+  .project-card:hover .card-line { width: 100%; }
+  .card-line { position: absolute; bottom: 0; left: 0; height: 1px; width: 0; background: var(--pink); transition: width 0.5s ease; }
+  .card-num { font-size: 0.68rem; letter-spacing: 0.15em; color: var(--text-dim); margin-bottom: 1.8rem; }
+  .card-icon { font-size: 2rem; margin-bottom: 1.2rem; display: block; }
+  .card-title { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: #fce8f3; line-height: 1.2; margin-bottom: 0.9rem; }
+  .card-desc { font-size: 0.86rem; color: var(--text-muted); line-height: 1.8; font-weight: 300; margin-bottom: 1.8rem; }
+  .card-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .tag { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.28rem 0.7rem; border: 0.5px solid rgba(255,110,180,0.2); color: rgba(255,110,180,0.5); }
+  .card-arrow { position: absolute; top: 2.5rem; right: 2.5rem; font-size: 1.1rem; color: var(--pink); opacity: 0; transition: all 0.25s; }
+
+  .page-header { padding: 4rem 3rem 3rem; max-width: 1100px; margin: 0 auto; border-bottom: 0.5px solid var(--border); margin-bottom: 3rem; }
+  .page-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; color: #fce8f3; line-height: 1.1; }
+  .page-header h1 em { font-style: italic; color: var(--pink); }
+  .page-header p { margin-top: 1rem; font-size: 0.95rem; color: var(--text-muted); max-width: 580px; line-height: 1.8; font-weight: 300; }
+  .page-content { max-width: 1100px; margin: 0 auto 6rem; padding: 0 3rem; }
+
+  /* SOLAR EMBED */
+  .solar-embed { width: 100%; aspect-ratio: 16/9; border: 0.5px solid var(--border); background: #03000a; display: flex; align-items: center; justify-content: center; margin-bottom: 2.5rem; overflow: hidden; min-height: 300px; position: relative; }
+  .solar-embed iframe { width: 100%; height: 100%; border: none; }
+
+  .solar-info { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+  .solar-def-card { position: relative; padding: 2rem 2rem 2rem 1.8rem; background: linear-gradient(135deg, rgba(255,110,180,0.06) 0%, rgba(3,0,10,0) 60%); border: 0.5px solid rgba(255,110,180,0.18); border-left: 2px solid var(--pink); overflow: hidden; }
+  .solar-def-card h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--pink-light); margin-bottom: 0.7rem; }
+  .solar-def-card p { font-family: 'Times New Roman', Times, serif; font-size: 0.93rem; color: var(--pink-light); line-height: 1.8; }
+
+  /* ══ CALCULATOR STYLES ══ */
+  .calc-section {
+    margin-bottom: 2.5rem;
+    border: 0.5px solid rgba(255,110,180,0.2);
+    border-top: 2px solid var(--pink);
+    background: linear-gradient(135deg, rgba(255,110,180,0.06) 0%, rgba(13,0,9,0) 70%);
+    padding: 2rem 2.2rem;
+  }
+  .calc-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--pink-light); margin-bottom: 0.4rem;
+  }
+  .calc-section-title em { font-style: italic; color: var(--pink); }
+  .calc-desc {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.88rem; color: var(--text-muted);
+    line-height: 1.7; margin-bottom: 1.6rem;
+  }
+  .calc-input-row {
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.6rem;
+  }
+  .calc-input-label {
+    font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .calc-input {
+    background: rgba(255,110,180,0.06);
+    border: 0.5px solid var(--pink-dim);
+    color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; padding: 0.55rem 1rem;
+    width: 110px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .calc-input:focus { border-color: var(--pink); }
+  .calc-btn {
+    padding: 0.55rem 1.8rem;
+    border: 0.5px solid var(--pink-dim);
+    background: transparent; color: var(--pink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.13em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .calc-btn:hover { background: var(--pink-faint); border-color: var(--pink); }
+
+  .planets-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: rgba(255,100,180,0.08);
+    margin-bottom: 1.5rem;
+  }
+  .planet-tile {
+    background: var(--bg);
+    padding: 1.4rem 0.8rem;
+    text-align: center; cursor: pointer;
+    transition: background 0.2s;
+    border: none; color: inherit; font-family: inherit;
+    width: 100%;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .planet-tile:hover, .planet-tile.selected { background: var(--bg-hover); }
+  .planet-tile:hover .planet-name, .planet-tile.selected .planet-name { color: var(--pink); }
+  .planet-img-wrap { width: 90px; height: 90px; margin: 0 auto 0.65rem; display: flex; align-items: center; justify-content: center; }
+  .planet-img-wrap img { width: 75px; height: 75px; object-fit: contain; display: block; }
+  .planet-name { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.3rem; display: block; transition: color 0.2s; }
+  .planet-age-val { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--pink-light); display: block; }
+  .planet-dist { font-size: 0.6rem; color: var(--text-dim); display: block; margin-top: 0.2rem; }
+
+  .fact-reveal {
+    border-left: 2px solid var(--pink);
+    padding: 1.2rem 1.5rem;
+    background: rgba(255,110,180,0.05);
+    display: none;
+    animation: fadeIn 0.3s ease both;
+  }
+  .fact-reveal.show { display: block; }
+  .fact-planet-label {
+    font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--pink); margin-bottom: 0.5rem;
+  }
+  .fact-planet-text {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.95rem; color: var(--pink-light); line-height: 1.8;
+  }
+
+  /* ROTO */
+  .roto-video-wrap { width: 100%; margin-bottom: 2.5rem; border: 0.5px solid var(--border); background: #000; position: relative; overflow: hidden; }
+  .roto-video-wrap video { width: 100%; display: block; background: #000; }
+  .roto-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+  .roto-def-card { padding: 2rem 2rem 2rem 1.8rem; background: linear-gradient(135deg, rgba(255,110,180,0.06) 0%, rgba(10,0,16,0) 60%); border: 0.5px solid rgba(255,110,180,0.18); border-left: 2px solid var(--pink); }
+  .roto-def-card h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--pink-light); margin-bottom: 0.7rem; }
+  .roto-def-card p { font-family: 'Times New Roman', Times, serif; font-size: 0.93rem; color: var(--pink-light); line-height: 1.8; }
+
+  /* ABOUT */
+  .about-layout { display: grid; grid-template-columns: 200px 1fr; gap: 3rem; align-items: start; }
+  .about-photo-wrap { width: 200px; height: 200px; border: 2px solid var(--pink); overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(255,80,160,0.15), rgba(100,0,60,0.3)); font-size: 4rem; }
+  .about-photo-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .about-name { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #fce8f3; margin-bottom: 0.4rem; }
+  .about-role { font-size: 0.73rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); margin-bottom: 1.5rem; }
+  .about-bio { font-family: 'Times New Roman', Times, serif; font-size: 1rem; color: var(--pink-light); line-height: 1.9; margin-bottom: 2rem; }
+  .about-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px; background: rgba(255,100,180,0.07); }
+  .fact { background: var(--bg); padding: 1.2rem 1.5rem; }
+  .fact-label { font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); margin-bottom: 0.4rem; }
+  .fact p { font-family: 'Times New Roman', Times, serif; font-size: 0.9rem; color: var(--pink-light); }
+
+  footer { border-top: 0.5px solid var(--border); padding: 1.8rem 3rem; max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  footer p { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
+  .footer-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--pink); opacity: 0.35; }
+
+  @media (max-width: 720px) {
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { gap: 0.9rem; }
+    .nav-links a { font-size: 0.68rem; }
+    .home-hero { padding: 4rem 1.5rem 3rem; min-height: auto; }
+    .definitions { padding: 0 1.5rem; grid-template-columns: 1fr; }
+    .projects-section { padding: 0 1.5rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .page-header { padding: 2.5rem 1.5rem 2rem; }
+    .page-content { padding: 0 1.5rem; }
+    .solar-info { grid-template-columns: 1fr; }
+    .roto-info-grid { grid-template-columns: 1fr; }
+    .about-layout { grid-template-columns: 1fr; }
+    .about-photo-wrap { width: 140px; height: 140px; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    .footer-dot { display: none; }
+    .planets-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="home-bg" id="homeBg"></div>
+<div class="solar-bg" id="solarBg"><canvas id="starCanvas"></canvas></div>
+<div class="roto-bg" id="rotoBg" style="background: radial-gradient(ellipse 90% 70% at 50% 50%, rgba(80,0,40,0.35) 0%, #0a0010 60%), #0a0010;"></div>
+
+<nav>
+  <button class="nav-logo" onclick="showPage('home')">Carla Cervantes</button>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
+    <li><a onclick="showPage('solar')" id="nav-solar">3D Solar System</a></li>
+    <li><a onclick="showPage('roto')" id="nav-roto">Rotoscope</a></li>
+    <li><a onclick="showPage('about')" id="nav-about">About</a></li>
+  </ul>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <section class="home-hero">
+    <p class="hero-eyebrow">Multimedia &amp; Authoring — 2026</p>
+    <h1>Where <em>media</em><br>meets meaning.</h1>
+    <p class="hero-desc">A collection of multimedia projects exploring the intersection of technology, storytelling, and digital authoring.</p>
+    <button class="hero-cta" onclick="showPage('solar')">Explore the work ↓</button>
+    <div class="hero-deco-line"></div>
+  </section>
+  <div class="definitions">
+    <div class="def-block">
+      <h3 class="def-heading">What is <em>Multimedia?</em></h3>
+      <p class="def-body">Multimedia is the combination of two or more media types such as text, images, audio, video, and animation delivered through a digital device. It allows creators to communicate ideas in richer, more engaging ways than a single medium can.</p>
+    </div>
+    <div class="def-block">
+      <h3 class="def-heading">What is <em>Authoring?</em></h3>
+      <p class="def-body">Authoring in multimedia refers to the process of creating and combining different media elements using specialized software called authoring tools. It involves designing, assembling, and publishing interactive multimedia content.</p>
+    </div>
+  </div>
+  <section class="projects-section">
+    <div class="section-header">
+      <span class="section-label">Selected Projects</span>
+      <span class="section-count">02 works</span>
+    </div>
+    <div class="projects-grid">
+      <button class="project-card" onclick="showPage('solar')">
+        <div class="card-line"></div>
+        <p class="card-num">01</p>
+        <span class="card-icon">🪐</span>
+        <h2 class="card-title">3D Solar System</h2>
+        <p class="card-desc">A fully rendered 3D model of the solar system built in Blender, complete with an age calculator that tells you how old you are on every planet.</p>
+        <div class="card-tags"><span class="tag">Blender</span><span class="tag">3D Modeling</span><span class="tag">Interactive</span></div>
+        <span class="card-arrow">↗</span>
+      </button>
+      <button class="project-card" onclick="showPage('roto')">
+        <div class="card-line"></div>
+        <p class="card-num">02</p>
+        <span class="card-icon">🎬</span>
+        <h2 class="card-title">1-Min Rotoscope</h2>
+        <p class="card-desc">A one-minute animated video created using the rotoscoping technique in Adobe After Effects, combining video, audio, and frame-by-frame tracing.</p>
+        <div class="card-tags"><span class="tag">After Effects</span><span class="tag">Rotoscoping</span><span class="tag">Animation</span></div>
+        <span class="card-arrow">↗</span>
+      </button>
+    </div>
+  </section>
+  <footer><p>© 2025–2026 Carla Cervantes</p><div class="footer-dot"></div><p>Multimedia &amp; Authoring</p></footer>
+</div>
+
+<!-- 3D SOLAR SYSTEM PAGE -->
+<div class="page" id="page-solar">
+  <div class="page-header">
+    <h1>3D <em>Solar System</em></h1>
+    <p>A 3D model of the solar system built using Blender, featuring an interactive age calculator that computes how old you are on each planet based on their orbital periods.</p>
+  </div>
+  <div class="page-content">
+
+    <!-- SOLAR SYSTEM EMBED (paste your project video/iframe here) -->
+    <div class="solar-embed">
+      <div style="text-align:center; color: rgba(255,179,217,0.4); position:relative; z-index:2;">
+        <span style="font-size:3.5rem; display:block; margin-bottom:1rem; animation: drift 4s ease-in-out infinite;">🪐</span>
+        <p style="font-family:'Times New Roman',serif; font-size:0.95rem; line-height:1.7;">Solar System project coming soon.<br>Paste your embed code here when ready.</p>
+      </div>
+    </div>
+
+    <!-- ══ AGE CALCULATOR ══ -->
+    <div class="calc-section">
+      <h3 class="calc-section-title">Planet Age <em>Calculator</em></h3>
+      <p class="calc-desc">Each planet orbits the Sun at a different speed. Enter your Earth age below to find out how old you would be on every planet — and discover a fun fact about each one.</p>
+
+      <div class="calc-input-row">
+        <span class="calc-input-label">Your age on Earth</span>
+        <input class="calc-input" type="number" id="ageInput" min="1" max="120" placeholder="e.g. 18" />
+        <button class="calc-btn" onclick="calculateAges()">Calculate</button>
+      </div>
+
+      <div class="planets-grid" id="planetsGrid"></div>
+
+      <div class="fact-reveal" id="factReveal">
+        <div class="fact-planet-label" id="factLabel"></div>
+        <div class="fact-planet-text" id="factText"></div>
+      </div>
+    </div>
+    <!-- ══ END CALCULATOR ══ -->
+
+    <div class="solar-info">
+      <div class="solar-def-card">
+        <h4>What is 3D Modeling?</h4>
+        <p>3D modeling is the process of creating a three-dimensional representation of an object using specialized software. In this project, each planet was modeled and textured in Blender to replicate the look of our solar system.</p>
+      </div>
+      <div class="solar-def-card">
+        <h4>What is Blender?</h4>
+        <p>Blender is a free and open-source 3D creation tool that supports modeling, animation, rendering, and more. It was used to build and animate all the planets in this project with realistic materials and lighting.</p>
+      </div>
+      <div class="solar-def-card">
+        <h4>The Age Calculator</h4>
+        <p>Each planet takes a different amount of time to orbit the Sun. By entering your age on Earth, the calculator converts it into your equivalent age on every other planet based on their orbital periods.</p>
+      </div>
+      <div class="solar-def-card">
+        <h4>What did I learn?</h4>
+        <p>Through this project I learned how to navigate Blender, apply textures and lighting to 3D objects, and combine interactive elements with visual design to create an engaging multimedia experience.</p>
+      </div>
+    </div>
+  </div>
+  <footer><p>© 2025–2026 Carla Cervantes</p><div class="footer-dot"></div><p>Multimedia &amp; Authoring</p></footer>
+</div>
+
+<!-- ROTOSCOPE PAGE -->
+<div class="page" id="page-roto">
+  <div class="page-header">
+    <h1>1-Min <em>Rotoscope</em></h1>
+    <p>A one minute animated video produced in Adobe After Effects using the rotoscoping technique, blending live footage with frame-by-frame illustration.</p>
+  </div>
+  <div class="page-content">
+    <div class="roto-video-wrap">
+      <video controls>
+        <source src="videos/source_roto.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="roto-info-grid">
+      <div class="roto-def-card">
+        <h4>What is Rotoscoping?</h4>
+        <p>Rotoscoping is an animation technique where animators trace over live action footage frame by frame to produce realistic movement. The result is a hand drawn animation that follows the natural motion of real subjects.</p>
+      </div>
+      <div class="roto-def-card">
+        <h4>What is Adobe After Effects?</h4>
+        <p>Adobe After Effects is a professional motion graphics and visual effects software. It was used in this project to apply the rotoscoping technique, add visual effects, and combine all audio and video elements into the final output.</p>
+      </div>
+      <div class="roto-def-card">
+        <h4>About this project</h4>
+        <p>This 1-minute rotoscope animation combines original video footage, music, and text. Each frame was carefully traced and styled to create a smooth, stylized animation that tells a visual story.</p>
+      </div>
+      <div class="roto-def-card">
+        <h4>What did I learn?</h4>
+        <p>This project taught me how to use Adobe After Effects for frame-by-frame animation, how to sync audio with visuals, and how rotoscoping bridges the gap between live-action and animation.</p>
+      </div>
+    </div>
+  </div>
+  <footer><p>© 2025–2026 Carla Cervantes</p><div class="footer-dot"></div><p>Multimedia &amp; Authoring</p></footer>
+</div>
+
+<!-- ABOUT PAGE -->
+<div class="page" id="page-about">
+  <div class="page-header"><h1><em>About</em> Me</h1></div>
+  <div class="page-content">
+    <div class="about-layout">
+      <div class="about-photo-wrap" id="aboutPhoto">🌸</div>
+      <div>
+        <h2 class="about-name">Carla Cervantes</h2>
+        <p class="about-role">IT Student · 2025–2026</p>
+        <p class="about-bio">Hi! I'm Carla, an IT student who discovered a passion for multimedia and digital creativity through this course. This website is a collection of the projects I built in Multimedia and Authoring — a subject that pushed me to combine technology with artistic expression.<br><br>Through this subject I learned how to create 3D models in Blender, produce animations using the rotoscoping technique in Adobe After Effects, and design interactive multimedia content. Every project taught me something new about how media and technology can work together to tell stories and communicate ideas in powerful ways.</p>
+        <div class="about-facts">
+          <div class="fact"><p class="fact-label">Course</p><p>Information Technology</p></div>
+          <div class="fact"><p class="fact-label">School Year</p><p>2025–2026</p></div>
+          <div class="fact"><p class="fact-label">Projects</p><p>3D Solar System, Rotoscope</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer><p>© 2025–2026 Carla Cervantes</p><div class="footer-dot"></div><p>Multimedia &amp; Authoring</p></footer>
+</div>
+
+<script>
+// ── PLANET DATA ──
+const PLANETS = [
+  { name: 'Mercury', img: 'planet/mercury.png', orbitalYears: 0.241,  dist: '57.9M km',  fact: 'Mercury has no atmosphere — temperatures swing from −180 °C at night to 430 °C during the day!' },
+  { name: 'Venus',   img: 'planet/venus.png',   orbitalYears: 0.615,  dist: '108.2M km', fact: 'A day on Venus is longer than its year. It rotates so slowly the Sun rises only twice each year!' },
+  { name: 'Earth',   img: 'planet/earth.png',   orbitalYears: 1.000,  dist: '149.6M km', fact: 'Earth is the only planet known to support liquid water on its surface — and life!' },
+  { name: 'Mars',    img: 'planet/mars.png',    orbitalYears: 1.881,  dist: '227.9M km', fact: 'Mars is home to Olympus Mons, the tallest volcano in the solar system at 22 km high — nearly 3× Everest!' },
+  { name: 'Jupiter', img: 'planet/jupiter.png', orbitalYears: 11.86,  dist: '778.5M km', fact: 'Jupiter\'s Great Red Spot is a storm that has been raging for over 350 years and is larger than Earth!' },
+  { name: 'Saturn',  img: 'planet/saturn.png',  orbitalYears: 29.46,  dist: '1.43B km',  fact: 'Saturn\'s rings are up to 282,000 km wide yet only about 1 km thick — like a sheet of paper scaled up!' },
+  { name: 'Uranus',  img: 'planet/uranus.png',  orbitalYears: 84.01,  dist: '2.87B km',  fact: 'Uranus rotates on its side with an axial tilt of 98° — it essentially rolls around the Sun!' },
+  { name: 'Neptune', img: 'planet/neptune.png', orbitalYears: 164.8,  dist: '4.50B km',  fact: 'Neptune has the fastest winds in the solar system at up to 2,100 km/h despite being so far from the Sun!' },
+];
+
+function renderGrid(age) {
+  const grid = document.getElementById('planetsGrid');
+  grid.style.display = 'grid';
+  grid.innerHTML = PLANETS.map((p, i) => {
+    const ageVal = age ? (age / p.orbitalYears).toFixed(2) + ' yrs' : '— yrs';
+    return `<button class="planet-tile" onclick="showFact(${i})" id="ptile-${i}">
+      <div class="planet-img-wrap">
+        <img src="${p.img}" alt="${p.name}">
+      </div>
+      <span class="planet-name">${p.name}</span>
+      <span class="planet-age-val">${ageVal}</span>
+      <span class="planet-dist">${p.dist} from Sun</span>
+    </button>`;
+  }).join('');
+}
+
+function calculateAges() {
+  const age = parseFloat(document.getElementById('ageInput').value);
+  if (!age || age <= 0 || age > 150) return;
+  renderGrid(age);
+  document.getElementById('factReveal').classList.remove('show');
+}
+
+document.addEventListener('DOMContentLoaded', () => renderGrid(null));
+
+function showFact(i) {
+  document.querySelectorAll('.planet-tile').forEach(t => t.classList.remove('selected'));
+  document.getElementById('ptile-' + i).classList.add('selected');
+  const p = PLANETS[i];
+  document.getElementById('factLabel').textContent = '✦ Fun Fact — ' + p.name;
+  document.getElementById('factText').textContent = p.fact;
+  document.getElementById('factReveal').classList.add('show');
+}
+
+// ── STARFIELD ──
+const canvas = document.getElementById('starCanvas');
+const ctx = canvas.getContext('2d');
+let stars = [], animFrame;
+
+function initStars() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  stars = [];
+  for (let i = 0; i < 220; i++) {
+    stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: Math.random() * 1.4 + 0.2, speed: Math.random() * 0.008 + 0.002, phase: Math.random() * Math.PI * 2 });
+  }
+}
+function drawStars(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const opacity = 0.15 + 0.6 * (0.5 + 0.5 * Math.sin(s.phase + t * s.speed * 60));
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,200,230,${opacity})`; ctx.fill();
+  });
+}
+function startStars() {
+  initStars();
+  function loop(t) { drawStars(t / 1000); animFrame = requestAnimationFrame(loop); }
+  animFrame = requestAnimationFrame(loop);
+}
+function stopStars() { cancelAnimationFrame(animFrame); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+let resizeTimer;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if (document.getElementById('solarBg').classList.contains('visible')) initStars(); }, 150); });
+
+// ── PAGE SWITCHING ──
+function showPage(id) {
+  const vid = document.querySelector('#page-roto video');
+  if (vid) vid.pause();
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+  const homeBg = document.getElementById('homeBg');
+  const solarBg = document.getElementById('solarBg');
+  const rotoBg  = document.getElementById('rotoBg');
+  homeBg.classList.toggle('hidden', id !== 'home');
+  if (id === 'solar') { solarBg.classList.add('visible'); rotoBg.classList.remove('visible'); startStars(); }
+  else if (id === 'roto') { rotoBg.classList.add('visible'); solarBg.classList.remove('visible'); stopStars(); }
+  else { solarBg.classList.remove('visible'); rotoBg.classList.remove('visible'); stopStars(); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
