@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carla Cervantes — Multimedia & Authoring</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #ff6eb4;
+    --pink-light: #ffb3d9;
+    --pink-dim: rgba(255,110,180,0.5);
+    --pink-faint: rgba(255,110,180,0.08);
+    --bg: #0d0009;
+    --bg-hover: #170010;
+    --text: #f2e8f0;
+    --text-muted: rgba(242,232,240,0.45);
+    --text-dim: rgba(242,232,240,0.2);
+    --border: rgba(255,100,180,0.15);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+  /* NAV */
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 1.4rem 3rem; border-bottom: 0.5px solid var(--border); position: sticky; top: 0; background: rgba(13,0,9,0.93); backdrop-filter: blur(14px); z-index: 200; }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.05rem; letter-spacing: 0.04em; color: var(--text); cursor: pointer; background: none; border: none; }
+  .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+  .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.13em; text-transform: uppercase; transition: color 0.2s; cursor: pointer; }
+  .nav-links a:hover, .nav-links a.active { color: var(--pink); }
+
+  /* PAGES */
+  .page { display: none; animation: fadeIn 0.45s ease both; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* BACKGROUNDS */
+  .home-bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse 80% 60% at 70% 20%, rgba(255,80,160,0.18) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 20% 80%, rgba(200,40,120,0.12) 0%, transparent 55%), #0d0009; pointer-events: none; opacity: 1; transition: opacity 0.4s; }
+  .home-bg.hidden { opacity: 0; }
+  .solar-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 0.4s; overflow: hidden; }
+  .solar-bg.visible { opacity: 1; }
+  .solar-bg canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .roto-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 0.4s; }
+  .roto-bg.visible { opacity: 1; }
+
+  /* HOME */
+  .home-hero { position: relative; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; padding: 6rem 3rem 4rem; max-width: 1100px; margin: 0 auto; }
+  .hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--pink); margin-bottom: 1.4rem; animation: fadeUp 0.6s 0.05s ease both; }
+  .home-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(3.2rem, 7.5vw, 5.8rem); line-height: 1.07; font-weight: 700; color: #fce8f3; margin-bottom: 1.5rem; animation: fadeUp 0.8s 0.15s ease both; }
+  .home-hero h1 em { font-style: italic; color: var(--pink); }
+  .hero-desc { font-size: 1rem; color: var(--text-muted); max-width: 500px; line-height: 1.8; font-weight: 300; margin-bottom: 2.8rem; animation: fadeUp 0.7s 0.3s ease both; }
+  .hero-cta { display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.85rem 2rem; border: 0.5px solid var(--pink-dim); color: var(--pink); font-size: 0.78rem; letter-spacing: 0.13em; text-transform: uppercase; transition: all 0.25s; background: transparent; cursor: pointer; animation: fadeUp 0.6s 0.45s ease both; font-family: 'DM Sans', sans-serif; }
+  .hero-cta:hover { background: var(--pink-faint); border-color: var(--pink); }
+  .hero-deco-line { position: absolute; right: 3rem; top: 6rem; width: 1px; height: 200px; background: linear-gradient(to bottom, transparent, rgba(255,110,180,0.3), transparent); }
+
+  .definitions { max-width: 1100px; margin: 0 auto 5rem; padding: 0 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .def-block { position: relative; padding: 2.5rem 2.5rem 2.5rem 2rem; background: linear-gradient(135deg, rgba(255,110,180,0.07) 0%, rgba(13,0,9,0) 60%); border: 0.5px solid rgba(255,110,180,0.2); border-top: 2px solid var(--pink); overflow: hidden; }
+  .def-block::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(255,110,180,0.1) 0%, transparent 70%); pointer-events: none; }
+  .def-heading { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--pink-light); margin-bottom: 1rem; line-height: 1.2; }
+  .def-heading em { font-style: italic; color: var(--pink); }
+  .def-block p.def-body { font-family: 'Times New Roman', Times, serif; font-size: 0.97rem; color: var(--pink-light); line-height: 1.85; font-weight: 400; }
+
+  .projects-section { max-width: 1100px; margin: 0 auto 6rem; padding: 0 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 2.5rem; border-bottom: 0.5px solid var(--border); padding-bottom: 1rem; }
+  .section-label { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); }
+  .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px; background: rgba(255,100,180,0.07); }
+  .project-card { background: var(--bg); padding: 2.5rem; position: relative; overflow: hidden; transition: background 0.3s; cursor: pointer; display: block; border: none; text-align: left; color: inherit; font-family: inherit; width: 100%; }
+  .project-card:hover { background: var(--bg-hover); }
+  .project-card:hover .card-arrow { transform: translate(4px,-4px); opacity: 1; }
+  .project-card:hover .card-line { width: 100%; }
+  .card-line { position: absolute; bottom: 0; left: 0; height: 1px; width: 0; background: var(--pink); transition: width 0.5s ease; }
+  .card-icon { font-size: 2rem; margin-bottom: 1.2rem; display: block; }
+  .card-title { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: #fce8f3; line-height: 1.2; margin-bottom: 0.9rem; }
+  .card-desc { font-size: 0.86rem; color: var(--text-muted); line-height: 1.8; font-weight: 300; margin-bottom: 1.8rem; }
+  .card-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .tag { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.28rem 0.7rem; border: 0.5px solid rgba(255,110,180,0.2); color: rgba(255,110,180,0.5); }
+  .card-arrow { position: absolute; top: 2.5rem; right: 2.5rem; font-size: 1.1rem; color: var(--pink); opacity: 0; transition: all 0.25s; }
+
+  .page-header { padding: 4rem 3rem 3rem; max-width: 1100px; margin: 0 auto; border-bottom: 0.5px solid var(--border); margin-bottom: 3rem; }
+  .page-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; color: #fce8f3; line-height: 1.1; }
+  .page-header h1 em { font-style: italic; color: var(--pink); }
+  .page-header p { margin-top: 1rem; font-size: 0.95rem; color: var(--text-muted); max-width: 580px; line-height: 1.8; font-weight: 300; }
+  .page-content { max-width: 1100px; margin: 0 auto 6rem; padding: 0 3rem; }
+
+  /* CALCULATOR */
+  .calc-section { margin-bottom: 3rem; border: 0.5px solid rgba(255,110,180,0.2); border-top: 2px solid var(--pink); background: linear-gradient(135deg, rgba(255,110,180,0.06) 0%, rgba(13,0,9,0) 70%); padding: 2rem 2.2rem; }
+  .calc-section-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--pink-light); margin-bottom: 0.4rem; }
+  .calc-section-title em { font-style: italic; color: var(--pink); }
+  .calc-desc { font-family: 'Times New Roman', Times, serif; font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.6rem; }
+  .calc-input-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.6rem; }
+  .calc-input-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
+  .calc-input { background: rgba(255,110,180,0.06); border: 0.5px solid var(--pink-dim); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 1rem; padding: 0.55rem 1rem; width: 110px; outline: none; transition: border-color 0.2s; }
+  .calc-input:focus { border-color: var(--pink); }
+  .calc-btn { padding: 0.55rem 1.8rem; border: 0.5px solid var(--pink-dim); background: transparent; color: var(--pink); font-family: 'DM Sans', sans-serif; font-size: 0.78rem; letter-spacing: 0.13em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .calc-btn:hover { background: var(--pink-faint); border-color: var(--pink); }
+  .planets-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,100,180,0.08); margin-bottom: 1.5rem; }
+  .planet-tile { background: var(--bg); padding: 1.4rem 0.8rem; text-align: center; cursor: pointer; transition: background 0.2s; border: none; color: inherit; font-family: inherit; width: 100%; display: flex; flex-direction: column; align-items: center; }
+  .planet-tile:hover, .planet-tile.selected { background: var(--bg-hover); }
+  .planet-tile:hover .planet-name, .planet-tile.selected .planet-name { color: var(--pink); }
+  .planet-img-wrap { width: 90px; height: 90px; margin: 0 auto 0.65rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; overflow: hidden; }
+  .planet-img-wrap img { width: 75px; height: 75px; object-fit: contain; display: block; }
+  .planet-img-wrap video { width: 90px; height: 90px; object-fit: cover; display: block; border-radius: 50%; }
+  .planet-name { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.3rem; display: block; transition: color 0.2s; }
+  .planet-age-val { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--pink-light); display: block; }
+  .planet-dist { font-size: 0.6rem; color: var(--text-dim); display: block; margin-top: 0.2rem; }
+  .fact-reveal { border-left: 2px solid var(--pink); padding: 1.2rem 1.5rem; background: rgba(255,110,180,0.05); display: none; animation: fadeIn 0.3s ease both; }
+  .fact-reveal.show { display: block; }
+  .fact-planet-label { font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); margin-bottom: 0.5rem; }
+  .fact-planet-text { font-family: 'Times New Roman', Times, serif; font-size: 0.95rem; color: var(--pink-light); line-height: 1.8; }
+
+  /* PLANETS SHOWCASE */
+  .planets-title-bar { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 3rem; }
+  .planets-title-text { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 700; letter-spacing: 0.25em; color: #fce8f3; white-space: nowrap; }
+  .planets-title-line { flex: 1; border-top: 2px dashed rgba(255,110,180,0.35); }
+  .planet-showcase { display: flex; flex-direction: column; gap: 0; margin-bottom: 3rem; }
+  .planet-row { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 2.5rem; padding: 3rem 0; border-bottom: 0.5px solid var(--border); }
+  .planet-row.reverse { direction: rtl; }
+  .planet-row.reverse > * { direction: ltr; }
+  .planet-vid-wrap { display: flex; align-items: center; justify-content: center; }
+  .planet-vid-wrap video { width: 220px; height: 220px; border-radius: 50%; object-fit: cover; display: block; }
+  .planet-vid-wrap img { width: 220px; height: 220px; border-radius: 50%; object-fit: contain; display: block; }
+  .planet-info { display: flex; flex-direction: column; justify-content: center; }
+  .planet-info-name { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; letter-spacing: 0.2em; color: #fce8f3; margin-bottom: 1rem; text-transform: uppercase; display: flex; align-items: center; gap: 0.8rem; }
+  .planet-info-name::before { content: ''; display: inline-block; width: 12px; height: 12px; border: 2px solid var(--pink); border-radius: 50%; flex-shrink: 0; }
+  .planet-info-desc { font-family: 'Times New Roman', Times, serif; font-size: 0.95rem; color: var(--text-muted); line-height: 1.85; text-align: justify; }
+
+  /* DOWNLOADS */
+  .download-section { margin-bottom: 3rem; }
+  .download-title-bar { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 1.8rem; }
+  .download-title-text { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 4vw, 2.5rem); font-weight: 700; letter-spacing: 0.25em; color: #fce8f3; white-space: nowrap; }
+  .download-title-line { flex: 1; border-top: 2px dashed rgba(255,110,180,0.35); }
+  .download-grid { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .download-btn {
+    display: inline-flex; align-items: center; gap: 0.65rem;
+    padding: 0.85rem 2rem;
+    border: 1px solid var(--pink);
+    background: transparent;
+    color: var(--pink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem; letter-spacing: 0.13em; text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .download-btn:hover {
+    background: var(--pink);
+    color: #0d0009;
+    box-shadow: 0 0 18px rgba(255,110,180,0.35);
+  }
+  .download-btn .btn-icon { font-size: 1rem; }
+  @media (max-width: 720px) { .download-title-text { font-size: 1.3rem; } .download-btn { width: 100%; justify-content: center; } }
+
+  /* SOLAR INFO CARDS */
+  .solar-info { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+  .solar-def-card { position: relative; padding: 2rem 2rem 2rem 1.8rem; background: linear-gradient(135deg, rgba(255,110,180,0.06) 0%, rgba(3,0,10,0) 60%); border: 0.5px solid rgba(255,110,180,0.18); border-left: 2px solid var(--pink); overflow: hidden; }
+  .solar-def-card h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--pink-light); margin-bottom: 0.7rem; }
+  .solar-def-card p { font-family: 'Times New Roman', Times, serif; font-size: 0.93rem; color: var(--pink-light); line-height: 1.8; }
+
+  /* STEP BY STEP */
+  .steps-box { background: linear-gradient(135deg, rgba(255,110,180,0.06) 0%, rgba(13,0,9,0) 70%); border: 0.5px solid rgba(255,110,180,0.2); border-top: 2px solid var(--pink); padding: 2rem 2.2rem; margin-bottom: 3rem; }
+  .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.8rem 1.5rem; }
+  .step-item { display: flex; flex-direction: column; gap: 0.5rem; }
+  .step-bullet { color: var(--pink); font-size: 0.8rem; }
+  .step-body { border-left: 2px solid var(--pink); padding-left: 1rem; }
+  .step-title { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: var(--pink-light); margin-bottom: 0.4rem; }
+  .step-desc { font-family: 'Times New Roman', Times, serif; font-size: 0.85rem; color: var(--text-muted); line-height: 1.75; }
+
+  /* WEEKLY PROGRESS */
+  .weekly-title-bar { display: flex; align-items: center; gap: 1.2rem; margin: 3rem 0 2rem; }
+  .weekly-title-text { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: 0.25em; color: #fce8f3; white-space: nowrap; }
+  .weekly-title-line { flex: 1; border-top: 2px dashed rgba(255,110,180,0.35); }
+  .weekly-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
+  .weekly-item { display: flex; flex-direction: column; gap: 0.6rem; }
+  .weekly-label { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); border-left: 2px solid var(--pink); padding-left: 0.6rem; }
+  .weekly-item video { width: 100%; display: block; border: 0.5px solid var(--border); background: #000; }
+
+  /* ── ROTO SIDE-BY-SIDE COMPARISON ── */
+  .roto-compare-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  .roto-compare-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .roto-compare-label {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--pink);
+    border-left: 2px solid var(--pink);
+    padding-left: 0.7rem;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .roto-compare-item .roto-video-wrap {
+    margin-bottom: 0;
+  }
+
+  /* SYNC CONTROLS */
+  .sync-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+    padding: 1rem 1.4rem;
+    border: 0.5px solid rgba(255,110,180,0.2);
+    border-left: 2px solid var(--pink);
+    background: rgba(255,110,180,0.04);
+  }
+  .sync-btn {
+    padding: 0.5rem 1.4rem;
+    border: 0.5px solid var(--pink-dim);
+    background: transparent;
+    color: var(--pink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sync-btn:hover { background: var(--pink-faint); border-color: var(--pink); }
+  .sync-btn.playing { background: var(--pink-faint); border-color: var(--pink); }
+  .sync-note {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    margin-left: auto;
+    font-style: italic;
+  }
+
+  /* ROTO */
+  .roto-video-wrap { width: 100%; margin-bottom: 2.5rem; border: 0.5px solid var(--border); background: #000; position: relative; overflow: hidden; }
+  .roto-video-wrap video { width: 100%; display: block; background: #000; cursor: pointer; }
+  .roto-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+  .roto-def-card { padding: 2rem 2rem 2rem 1.8rem; background: linear-gradient(135deg, rgba(255,110,180,0.06) 0%, rgba(10,0,16,0) 60%); border: 0.5px solid rgba(255,110,180,0.18); border-left: 2px solid var(--pink); }
+  .roto-def-card h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--pink-light); margin-bottom: 0.7rem; }
+  .roto-def-card p { font-family: 'Times New Roman', Times, serif; font-size: 0.93rem; color: var(--pink-light); line-height: 1.8; }
+
+  /* ABOUT */
+  .about-layout { display: grid; grid-template-columns: 200px 1fr; gap: 3rem; align-items: start; }
+  .about-photo-wrap { width: 200px; height: 200px; border: 2px solid var(--pink); overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(255,80,160,0.15), rgba(100,0,60,0.3)); font-size: 4rem; }
+  .about-photo-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .about-name { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #fce8f3; margin-bottom: 0.4rem; }
+  .about-role { font-size: 0.73rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); margin-bottom: 1.5rem; }
+  .about-bio { font-family: 'Times New Roman', Times, serif; font-size: 1rem; color: var(--pink-light); line-height: 1.9; margin-bottom: 2rem; }
+  .about-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px; background: rgba(255,100,180,0.07); }
+  .fact { background: var(--bg); padding: 1.2rem 1.5rem; }
+  .fact-label { font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); margin-bottom: 0.4rem; }
+  .fact p { font-family: 'Times New Roman', Times, serif; font-size: 0.9rem; color: var(--pink-light); }
+
+  footer { border-top: 0.5px solid var(--border); padding: 1.8rem 3rem; max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  footer p { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
+  .footer-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--pink); opacity: 0.35; }
+
+  @media (max-width: 720px) {
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { gap: 0.9rem; }
+    .nav-links a { font-size: 0.68rem; }
+    .home-hero { padding: 4rem 1.5rem 3rem; min-height: auto; }
+    .definitions { padding: 0 1.5rem; grid-template-columns: 1fr; }
+    .projects-section { padding: 0 1.5rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .page-header { padding: 2.5rem 1.5rem 2rem; }
+    .page-content { padding: 0 1.5rem; }
+    .solar-info { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    .weekly-grid { grid-template-columns: 1fr; }
+    .roto-compare-wrap { grid-template-columns: 1fr; }
+    .roto-info-grid { grid-template-columns: 1fr; }
+    .about-layout { grid-template-columns: 1fr; }
+    .about-photo-wrap { width: 140px; height: 140px; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    .footer-dot { display: none; }
+    .planets-grid { grid-template-columns: repeat(2, 1fr); }
+    .planets-title-text { font-size: 1.4rem; }
+    .planet-row { grid-template-columns: 1fr; gap: 1.5rem; padding: 2rem 0; }
+    .planet-row.reverse { direction: ltr; }
+    .planet-vid-wrap video, .planet-vid-wrap img { width: 160px; height: 160px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="home-bg" id="homeBg"></div>
+<div class="solar-bg" id="solarBg"><canvas id="starCanvas"></canvas></div>
+<div class="roto-bg" id="rotoBg" style="background: radial-gradient(ellipse 90% 70% at 50% 50%, rgba(80,0,40,0.35) 0%, #0a0010 60%), #0a0010;"></div>
+
+<nav>
+  <button class="nav-logo" onclick="showPage('home')">Carla Cervantes</button>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
+    <li><a onclick="showPage('solar')" id="nav-solar">3D Solar System</a></li>
+    <li><a onclick="showPage('roto')" id="nav-roto">Rotoscope</a></li>
+    <li><a onclick="showPage('about')" id="nav-about">About</a></li>
+  </ul>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <section class="home-hero">
+    <p class="hero-eyebrow">Multimedia &amp; Authoring</p>
+    <h1>Where <em>media</em><br>meets meaning.</h1>
+    <p class="hero-desc">A collection of multimedia projects exploring the intersection of technology, storytelling, and digital authoring.</p>
+    <button class="hero-cta" onclick="showPage('solar')">Explore the work ↓</button>
+    <div class="hero-deco-line"></div>
+  </section>
+  <div class="definitions">
+    <div class="def-block">
+      <h3 class="def-heading">What is <em>Multimedia?</em></h3>
+      <p class="def-body">Multimedia is the combination of two or more media types such as text, images, audio, video, and animation delivered through a digital device. It allows creators to communicate ideas in richer, more engaging ways than a single medium can.</p>
+    </div>
+    <div class="def-block">
+      <h3 class="def-heading">What is <em>Authoring?</em></h3>
+      <p class="def-body">Authoring in multimedia refers to the process of creating and combining different media elements using specialized software called authoring tools. It involves designing, assembling, and publishing interactive multimedia content.</p>
+    </div>
+  </div>
+  <section class="projects-section">
+    <div class="section-header">
+      <span class="section-label">Selected Projects</span>
+    </div>
+    <div class="projects-grid">
+      <button class="project-card" onclick="showPage('solar')">
+        <div class="card-line"></div>
+        <span class="card-icon">🪐</span>
+        <h2 class="card-title">3D Solar System</h2>
+        <p class="card-desc">A fully rendered 3D model of the solar system built in Blender, complete with an age calculator that tells you how old you are on every planet.</p>
+        <div class="card-tags"><span class="tag">Blender</span><span class="tag">3D Modeling</span><span class="tag">Interactive</span></div>
+        <span class="card-arrow">↗</span>
+      </button>
+      <button class="project-card" onclick="showPage('roto')">
+        <div class="card-line"></div>
+        <span class="card-icon">🎬</span>
+        <h2 class="card-title">1-Min Rotoscope</h2>
+        <p class="card-desc">A one-minute animated video created using the rotoscoping technique in Adobe After Effects, combining video, audio, and frame-by-frame tracing.</p>
+        <div class="card-tags"><span class="tag">After Effects</span><span class="tag">Rotoscoping</span><span class="tag">Animation</span></div>
+        <span class="card-arrow">↗</span>
+      </button>
+    </div>
+  </section>
+  <footer><p>© 2025–2026 Carla Cervantes</p><div class="footer-dot"></div><p>Multimedia &amp; Authoring</p></footer>
+</div>
+
+<!-- 3D SOLAR SYSTEM PAGE -->
+<div class="page" id="page-solar">
+  <div class="page-header">
+    <h1>3D <em>Solar System</em></h1>
+    <p>A 3D model of the solar system built using Blender, featuring an interactive age calculator that computes how old you are on each planet based on their orbital periods.</p>
+  </div>
+  <div class="page-content">
+
+    <div class="calc-section">
+      <h3 class="calc-section-title">Planet Age <em>Calculator</em></h3>
+      <p class="calc-desc">Each planet orbits the Sun at a different speed. Enter your Earth age below to find out how old you would be on every planet — and discover a fun fact about each one.</p>
+      <div class="calc-input-row">
+        <span class="calc-input-label">Your age on Earth</span>
+        <input class="calc-input" type="number" id="ageInput" min="1" max="120" placeholder="e.g. 18" />
+        <button class="calc-btn" onclick="calculateAges()">Calculate</button>
+      </div>
+      <div class="planets-grid" id="planetsGrid"></div>
+      <div class="fact-reveal" id="factReveal">
+        <div class="fact-planet-label" id="factLabel"></div>
+        <div class="fact-planet-text" id="factText"></div>
+      </div>
+    </div>
+
+    <div class="planets-title-bar">
+      <span class="planets-title-text">P L A N E T S</span>
+      <span class="planets-title-line"></span>
+    </div>
+
+    <div class="planet-showcase" id="planetShowcase"></div>
+
+    <!-- DOWNLOAD BUTTONS -->
+    <div class="download-bar">
+      <div class="download-bar-label">✦ Downloadable Files</div>
+      <div class="download-btn-row">
+        <a class="download-btn" href="https://drive.google.com/drive/folders/1xl081uczZpnDAyETWccmbbFYhPLZ7iL9?usp=sharing" target="_blank" rel="noopener">
+          <span class="download-icon">📄</span>
+          <span class="download-text">
+            <span class="download-title">Script / Documentation</span>
+            <span class="download-sub">Google Drive — View &amp; Download</span>
+          </span>
+          <span class="download-arrow">↗</span>
+        </a>
+        <a class="download-btn" href="https://drive.google.com/drive/folders/1bHFdbMc1kXY8nPLj4ZUzsKkVUZ0wmMTY?usp=drive_link" target="_blank" rel="noopener">
+          <span class="download-icon">🪐</span>
+          <span class="download-text">
+            <span class="download-title">Blender Project Files</span>
+            <span class="download-sub">Google Drive — View &amp; Download</span>
+          </span>
+          <span class="download-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- DOWNLOAD SECTION -->
+    <div class="download-section">
+      <div class="download-title-bar">
+        <span class="download-title-text">D O W N L O A D S</span>
+        <span class="download-title-line"></span>
+      </div>
+      <div class="download-grid">
+        <a class="download-card" href="https://drive.google.com/drive/folders/1xl081uczZpnDAyETWccmbbFYhPLZ7iL9?usp=sharing" target="_blank" rel="noopener">
+          <span class="download-icon">📄</span>
+          <div class="download-info">
+            <span class="download-label">Scripts &amp; Textures</span>
+            <span class="download-desc">Source scripts and texture files used in the 3D Solar System project.</span>
+          </div>
+          <span class="download-arrow">↗</span>
+        </a>
+        <a class="download-card" href="https://drive.google.com/drive/folders/1bHFdbMc1kXY8nPLj4ZUzsKkVUZ0wmMTY?usp=drive_link" target="_blank" rel="noopener">
+          <span class="download-icon">🪐</span>
+          <div class="download-info">
+            <span class="download-label">Blender File</span>
+            <span class="download-desc">The full Blender project file for the 3D Solar System model.</span>
+          </div>
+          <span class="download-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="solar-info">
+      <div class="solar-def-card">
+        <h4>What is 3D Modeling?</h4>
+        <p>3D modeling is the process of creating a three-dimensional representation of an object using specialized software. In this project, each planet was modeled and textured in Blender to replicate the look of our solar system.</p>
+      </div>
+      <div class="solar-def-card">
+        <h4>What is Blender?</h4>
+        <p>Blender is a free and open-source 3D creation tool that supports modeling, animation, rendering, and more. It was used to build and animate all the planets in this project with realistic materials and lighting.</p>
+      </div>
+      <div class="solar-def-card">
+        <h4>The Age Calculator</h4>
+        <p>Each planet takes a different amount of time to orbit the Sun. By entering your age on Earth, the calculator converts it into your equivalent age on every other planet based on their orbital periods.</p>
+      </div>
+      <div class="solar-def-card">
+        <h4>What did I learn?</h4>
+        <p>Through this project I learned how to navigate Blender, apply textures and lighting to 3D objects, and combine interactive elements with visual design to create an engaging multimedia experience.</p>
+      </div>
+    </div>
+  </div>
+  <footer><p>© 2025–2026 Carla Cervantes</p><div class="footer-dot"></div><p>Multimedia &amp; Authoring</p></footer>
+</div>
+
+<!-- ROTOSCOPE PAGE -->
+<div class="page" id="page-roto">
+  <div class="page-header">
+    <h1>1-Min <em>Rotoscope</em></h1>
+    <p>A one minute animated video produced in Adobe After Effects using the rotoscoping technique, blending live footage with frame-by-frame illustration.</p>
+  </div>
+  <div class="page-content">
+
+    <!-- SIDE-BY-SIDE VIDEO COMPARISON -->
+    <div class="roto-compare-wrap">
+      <div class="roto-compare-item">
+        <span class="roto-compare-label">Reference Video</span>
+        <div class="roto-video-wrap">
+          <video id="refVid">
+            <source src="videos/source_roto.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+      <div class="roto-compare-item">
+        <span class="roto-compare-label">Rotoscope Output</span>
+        <div class="roto-video-wrap">
+          <video id="rotoVid">
+            <source src="videos/final output.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+
+    <!-- SYNC CONTROLS -->
+    <div class="sync-controls">
+      <button class="sync-btn" id="syncPlayBtn" onclick="syncPlay()">▶ Play Both</button>
+      <button class="sync-btn" onclick="syncPause()">⏸ Pause Both</button>
+      <button class="sync-btn" onclick="syncRestart()">↺ Restart</button>
+      <span class="sync-note">Videos are synced — they play and pause together.</span>
+    </div>
+
+    <!-- WEEKLY PROGRESS -->
+    <div class="weekly-title-bar">
+      <span class="weekly-title-text">W E E K L Y</span>
+      <span class="weekly-title-line"></span>
+    </div>
+    <div class="weekly-grid">
+      <div class="weekly-item"><span class="weekly-label">Week 1</span><video controls><source src="videos/WEEK 1.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 2</span><video controls><source src="videos/WEEK 2.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 3</span><video controls><source src="videos/WEEK 3.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 4</span><video controls><source src="videos/WEEK 4.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 5</span><video controls><source src="videos/WEEK 5.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 6</span><video controls><source src="videos/WEEK 6.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 7</span><video controls><source src="videos/WEEK 7.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 8</span><video controls><source src="videos/WEEK 8.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 9</span><video controls><source src="videos/WEEK 9.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 10</span><video controls><source src="videos/WEEK 10.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 11</span><video controls><source src="videos/WEEK 11.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 12</span><video controls><source src="videos/WEEK 12.mp4" type="video/mp4"></video></div>
+    </div>
+
+    <!-- INFO CARDS -->
+    <div class="roto-info-grid">
+      <div class="roto-def-card">
+        <h4>What is Rotoscoping?</h4>
+        <p>Rotoscoping is an animation technique where animators trace over live action footage frame by frame to produce realistic movement. The result is a hand drawn animation that follows the natural motion of real subjects.</p>
+      </div>
+      <div class="roto-def-card">
+        <h4>What is Adobe After Effects?</h4>
+        <p>Adobe After Effects is a professional motion graphics and visual effects software. It was used in this project to apply the rotoscoping technique, add visual effects, and combine all audio and video elements into the final output.</p>
+      </div>
+      <div class="roto-def-card">
+        <h4>About this project</h4>
+        <p>This 1-minute rotoscope animation combines original video footage, music, and text. Each frame was carefully traced and styled to create a smooth, stylized animation that tells a visual story.</p>
+      </div>
+      <div class="roto-def-card">
+        <h4>What did I learn?</h4>
+        <p>This project taught me how to use Adobe After Effects for frame-by-frame animation, how to sync audio with visuals, and how rotoscoping bridges the gap between live-action and animation.</p>
+      </div>
+    </div>
+
+    <!-- STEPS -->
+    <div class="weekly-title-bar" style="margin-top: 2rem;">
+      <span class="weekly-title-text">S T E P S</span>
+      <span class="weekly-title-line"></span>
+    </div>
+    <div class="steps-box">
+      <div class="steps-grid">
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Choose a Video</h4><p class="step-desc">Select a video clip that you want to rotoscope. Pick something with clear, distinct movement and a subject that stands out from the background.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Cut to Your Desired Length</h4><p class="step-desc">The chosen video is 1 minute long. It was divided into parts across 12 weeks so that each week only a small portion needed to be traced and rendered, making the process much more manageable.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Import into After Effects</h4><p class="step-desc">Open Adobe After Effects and import your trimmed video clip into a new composition. Set up your canvas size and frame rate to match the original footage.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Trace Frame by Frame</h4><p class="step-desc">Using the pen tool, trace the outline of your subject on every single frame. Each frame is drawn individually to follow the natural movement of the subject.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Fill with Color</h4><p class="step-desc">Once the outlines are complete, fill each traced shape with your chosen colors. You can use flat colors, gradients, or stylized shading to give your animation a unique look.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Add Background &amp; Effects</h4><p class="step-desc">Replace or stylize the background to complement your animation. Add visual effects, transitions, or overlays in After Effects to enhance the overall look.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Sync Audio</h4><p class="step-desc">Add music or sound effects and sync them with the animation. Adjust timing so the audio matches the movement and mood of the rotoscoped visuals.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Export the Final Output</h4><p class="step-desc">Once everything is polished, render and export your animation using Adobe Media Encoder. Export as an MP4 file for web use.</p></div></div>
+      </div>
+    </div>
+
+  </div>
+  <footer><p>© 2025–2026 Carla Cervantes</p><div class="footer-dot"></div><p>Multimedia &amp; Authoring</p></footer>
+</div>
+
+<script>
+const CALC_PLANETS = [
+  { name: 'Mercury', img: 'planet/mercury.png', vid: 'solar/mercury.mp4', orbitalYears: 0.241,  dist: '57.9M km',  fact: 'Mercury has no atmosphere — temperatures swing from −180 °C at night to 430 °C during the day!' },
+  { name: 'Venus',   img: 'planet/venus.png',   vid: 'solar/venus.mp4',   orbitalYears: 0.615,  dist: '108.2M km', fact: 'A day on Venus is longer than its year. It rotates so slowly the Sun rises only twice each year!' },
+  { name: 'Earth',   img: 'planet/earth.png',   vid: 'solar/earth.mp4',   orbitalYears: 1.000,  dist: '149.6M km', fact: 'Earth is the only planet known to support liquid water on its surface — and life!' },
+  { name: 'Mars',    img: 'planet/mars.png',    vid: 'solar/mars.mp4',    orbitalYears: 1.881,  dist: '227.9M km', fact: 'Mars is home to Olympus Mons, the tallest volcano in the solar system at 22 km high — nearly 3x Everest!' },
+  { name: 'Jupiter', img: 'planet/jupiter.png', vid: 'solar/jupiter.mp4', orbitalYears: 11.86,  dist: '778.5M km', fact: 'Jupiter\'s Great Red Spot is a storm that has been raging for over 350 years and is larger than Earth!' },
+  { name: 'Saturn',  img: 'planet/saturn.png',  vid: null,                orbitalYears: 29.46,  dist: '1.43B km',  fact: 'Saturn\'s rings are up to 282,000 km wide yet only about 1 km thick — like a sheet of paper scaled up!' },
+  { name: 'Uranus',  img: 'planet/uranus.png',  vid: null,                orbitalYears: 84.01,  dist: '2.87B km',  fact: 'Uranus rotates on its side with an axial tilt of 98 degrees — it essentially rolls around the Sun!' },
+  { name: 'Neptune', img: 'planet/neptune.png', vid: null,                orbitalYears: 164.8,  dist: '4.50B km',  fact: 'Neptune has the fastest winds in the solar system at up to 2,100 km/h despite being so far from the Sun!' },
+  { name: 'Pluto',   img: 'planet/pluto.png',   vid: 'solar/pluto.mp4',  orbitalYears: 248.0,  dist: '5.91B km',  fact: 'Pluto was reclassified as a dwarf planet in 2006. It has five moons and a heart-shaped nitrogen ice plain!' },
+];
+
+function renderGrid(age) {
+  const grid = document.getElementById('planetsGrid');
+  grid.innerHTML = CALC_PLANETS.map((p, i) => {
+    const ageVal = age ? (age / p.orbitalYears).toFixed(2) + ' yrs' : '— yrs';
+    const media = p.vid
+      ? `<video src="${p.vid}" autoplay muted loop playsinline style="width:90px;height:90px;object-fit:cover;border-radius:50%;display:block;"></video>`
+      : `<img src="${p.img}" alt="${p.name}" style="width:75px;height:75px;object-fit:contain;display:block;">`;
+    return `<button class="planet-tile" onclick="showFact(${i})" id="ptile-${i}">
+      <div class="planet-img-wrap">${media}</div>
+      <span class="planet-name">${p.name}</span>
+      <span class="planet-age-val">${ageVal}</span>
+      <span class="planet-dist">${p.dist} from Sun</span>
+    </button>`;
+  }).join('');
+}
+
+function calculateAges() {
+  const age = parseFloat(document.getElementById('ageInput').value);
+  if (!age || age <= 0 || age > 150) return;
+  renderGrid(age);
+  document.getElementById('factReveal').classList.remove('show');
+}
+
+function showFact(i) {
+  document.querySelectorAll('.planet-tile').forEach(t => t.classList.remove('selected'));
+  document.getElementById('ptile-' + i).classList.add('selected');
+  const p = CALC_PLANETS[i];
+  document.getElementById('factLabel').textContent = '✦ Fun Fact — ' + p.name;
+  document.getElementById('factText').textContent = p.fact;
+  document.getElementById('factReveal').classList.add('show');
+}
+
+const SOLAR_PLANETS_DATA = [
+  { name: 'Sun',     file: 'solar/sun.mp4',     img: null,                 desc: 'The Sun is the central star of our solar system, accounting for about 99.8% of its total mass. It is a massive sphere of hot plasma, primarily composed of hydrogen and helium, undergoing constant nuclear fusion. This fusion process produces the light and heat that sustain life on Earth. Without the Sun\'s energy, Earth would be a frozen, lifeless rock. It also governs the orbits of all planets, asteroids, and comets in the solar system.' },
+  { name: 'Mercury', file: 'solar/mercury.mp4', img: null,                 desc: 'Mercury is the smallest planet in the solar system and the closest to the Sun. It has a barren, rocky surface and no atmosphere to trap heat, resulting in extremely hot days and freezing nights. A year on Mercury lasts only 88 Earth days, making it the fastest-orbiting planet. Despite its size, Mercury has a surprisingly large iron core that generates a weak magnetic field.' },
+  { name: 'Venus',   file: 'solar/venus.mp4',   img: null,                 desc: 'Venus is the second planet from the Sun and the hottest in our solar system, despite not being the closest. Its thick atmosphere of carbon dioxide creates a runaway greenhouse effect, with surface temperatures reaching 465 °C. A day on Venus is longer than its year, it rotates so slowly that the Sun rises only twice each Venusian year, and it spins in the opposite direction to most planets.' },
+  { name: 'Earth',   file: 'solar/earth.mp4',   img: null,                 desc: 'Earth is the third planet from the Sun and the only known world to harbor life. It has liquid water on its surface, a protective magnetic field, and an atmosphere rich in oxygen and nitrogen. Earth\'s axial tilt gives us seasons, while its single large Moon stabilizes its climate. Roughly 71% of its surface is covered by oceans, making it the "Blue Planet."' },
+  { name: 'Mars',    file: 'solar/mars.mp4',    img: null,                 desc: 'Mars is the fourth planet from the Sun, known as the Red Planet due to iron oxide on its surface. It hosts Olympus Mons, the tallest volcano in the solar system at 22 km — nearly three times the height of Everest. Mars has a thin atmosphere of mostly carbon dioxide and experiences massive dust storms. It is a primary target in the search for past microbial life and future human exploration.' },
+  { name: 'Jupiter', file: 'solar/jupiter.mp4', img: null,                 desc: 'Jupiter is the largest planet in the solar system, so massive it could contain all other planets combined. Its Great Red Spot is a storm that has raged for over 350 years, larger than Earth itself. Jupiter is a gas giant with no solid surface, composed mainly of hydrogen and helium. It has at least 95 known moons, including Ganymede, the largest moon in the solar system.' },
+  { name: 'Saturn',  file: 'solar/saturn.mp4',  img: 'planet/saturn.png',  desc: 'Saturn is the sixth planet from the Sun and the second largest in the solar system. It is famous for its stunning ring system, made of ice and rock particles, which extends up to 282,000 km wide yet is only about 1 km thick. Saturn is a gas giant with a density so low it would float on water. It has 146 known moons, including Titan, which has a thick atmosphere and lakes of liquid methane.' },
+  { name: 'Uranus',  file: 'solar/uranus.mp4',  img: 'planet/uranus.png',  desc: 'Uranus is the seventh planet from the Sun and rotates on its side with an axial tilt of 98 degrees, essentially rolling around the Sun rather than spinning upright. It is an ice giant composed mainly of water, methane, and ammonia ices. Its blue-green color comes from methane in its atmosphere absorbing red light. Uranus has 13 known rings and 28 moons, and experiences the most extreme seasons in the solar system.' },
+  { name: 'Neptune', file: 'solar/neptune.mp4', img: 'planet/neptune.png', desc: 'Neptune is the eighth and farthest known planet from the Sun. It is a deep blue ice giant with the fastest winds in the solar system, reaching up to 2,100 km/h. Neptune has a large storm system called the Great Dark Spot, similar to Jupiter\'s Great Red Spot. It takes 165 Earth years to complete one orbit around the Sun. Its largest moon, Triton, orbits in the opposite direction and is slowly spiraling inward.' },
+  { name: 'Pluto',   file: 'solar/pluto.mp4',   img: 'planet/pluto.png',   desc: 'Pluto is a dwarf planet located in the Kuiper Belt, beyond Neptune. It was considered the ninth planet until 2006 when it was reclassified by the International Astronomical Union. Pluto has a thin atmosphere of nitrogen, methane, and carbon monoxide. It has five known moons, the largest being Charon, which is so big relative to Pluto that the two are sometimes called a double dwarf planet system. Its surface features a heart-shaped nitrogen ice plain called Tombaugh Regio.' },
+];
+
+function initPlanetShowcase() {
+  const showcase = document.getElementById('planetShowcase');
+  showcase.innerHTML = SOLAR_PLANETS_DATA.map((p, i) => {
+    const isReverse = i % 2 !== 0;
+    const media = p.img
+      ? `<img src="${p.img}" alt="${p.name}">`
+      : `<video autoplay muted loop playsinline><source src="${p.file}" type="video/mp4"></video>`;
+    return `<div class="planet-row${isReverse ? ' reverse' : ''}">
+      <div class="planet-vid-wrap">${media}</div>
+      <div class="planet-info">
+        <div class="planet-info-name">${p.name}</div>
+        <p class="planet-info-desc">${p.desc}</p>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderGrid(null);
+  initPlanetShowcase();
+});
+
+// STARFIELD
+const canvas = document.getElementById('starCanvas');
+const ctx = canvas.getContext('2d');
+let stars = [], animFrame;
+function initStars() {
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight; stars = [];
+  for (let i = 0; i < 220; i++) stars.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*1.4+0.2, speed: Math.random()*0.008+0.002, phase: Math.random()*Math.PI*2 });
+}
+function drawStars(t) {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  stars.forEach(s => { const o=0.15+0.6*(0.5+0.5*Math.sin(s.phase+t*s.speed*60)); ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,200,230,${o})`; ctx.fill(); });
+}
+function startStars() { initStars(); function loop(t){drawStars(t/1000);animFrame=requestAnimationFrame(loop);} animFrame=requestAnimationFrame(loop); }
+function stopStars() { cancelAnimationFrame(animFrame); ctx.clearRect(0,0,canvas.width,canvas.height); }
+let resizeTimer;
+window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(document.getElementById('solarBg').classList.contains('visible'))initStars();},150);});
+
+// SYNC VIDEO PLAYBACK
+function getSyncVids() {
+  return [document.getElementById('refVid'), document.getElementById('rotoVid')];
+}
+function syncPlay() {
+  const [a, b] = getSyncVids();
+  if (!a || !b) return;
+  b.currentTime = a.currentTime; // keep in sync before playing
+  a.play(); b.play();
+  document.getElementById('syncPlayBtn').classList.add('playing');
+}
+function syncPause() {
+  const [a, b] = getSyncVids();
+  if (!a || !b) return;
+  a.pause(); b.pause();
+  document.getElementById('syncPlayBtn').classList.remove('playing');
+}
+function syncRestart() {
+  const [a, b] = getSyncVids();
+  if (!a || !b) return;
+  a.currentTime = 0; b.currentTime = 0;
+  a.play(); b.play();
+  document.getElementById('syncPlayBtn').classList.add('playing');
+}
+// Keep them in sync if one drifts more than 0.3s
+function initSyncCheck() {
+  const [a, b] = getSyncVids();
+  if (!a || !b) return;
+  // Clicking either video toggles both
+  [a, b].forEach(v => {
+    v.addEventListener('click', () => {
+      if (a.paused) { syncPlay(); } else { syncPause(); }
+    });
+  });
+  // Drift correction every second
+  setInterval(() => {
+    if (!a || !b || a.paused) return;
+    if (Math.abs(a.currentTime - b.currentTime) > 0.3) {
+      b.currentTime = a.currentTime;
+    }
+  }, 1000);
+  // When either ends, pause both
+  [a, b].forEach(v => v.addEventListener('ended', syncPause));
+}
+document.addEventListener('DOMContentLoaded', initSyncCheck);
+
+// PAGE SWITCHING
+function showPage(id) {
+  document.querySelectorAll('#page-roto video').forEach(v => v.pause());
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+  const homeBg=document.getElementById('homeBg'), solarBg=document.getElementById('solarBg'), rotoBg=document.getElementById('rotoBg');
+  homeBg.classList.toggle('hidden', id!=='home');
+  if(id==='solar'){solarBg.classList.add('visible');rotoBg.classList.remove('visible');startStars();}
+  else if(id==='roto'){rotoBg.classList.add('visible');solarBg.classList.remove('visible');stopStars();}
+  else{solarBg.classList.remove('visible');rotoBg.classList.remove('visible');stopStars();}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
