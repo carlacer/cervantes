@@ -123,8 +123,13 @@
   .planet-info-name::before { content: ''; display: inline-block; width: 12px; height: 12px; border: 2px solid var(--pink); border-radius: 50%; flex-shrink: 0; }
   .planet-info-desc { font-family: 'Times New Roman', Times, serif; font-size: 0.95rem; color: var(--text-muted); line-height: 1.85; text-align: justify; }
 
-  .system-overview-wrap { width: 100%; max-width: 900px; margin: 0 auto 3rem; border: 0.5px solid var(--border); background: #000; overflow: hidden; }
-  .system-overview-wrap video, .system-overview-wrap iframe { width: 100%; aspect-ratio: 16/9; display: block; border: none; }
+  .system-overview-wrap {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto 3rem;
+    overflow: hidden;
+  }
+  .system-overview-wrap video, .system-overview-wrap iframe { width: 100%; aspect-ratio: 16/9; display: block; border: none; mix-blend-mode: lighten; }
 
   .download-section { margin-bottom: 3rem; }
   .download-title-bar { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 1.8rem; }
@@ -283,7 +288,7 @@
   .roto-video-wrap video { width: 100%; display: block; background: #000; cursor: pointer; }
   .roto-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
   .roto-def-card { padding: 2rem 2rem 2rem 1.8rem; background: linear-gradient(135deg, rgba(255,110,180,0.06) 0%, rgba(10,0,16,0) 60%); border: 0.5px solid rgba(255,110,180,0.18); border-left: 2px solid var(--pink); }
-  .roto-def-card h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--pink-light); margin-bottom: 0.7rem; }
+  .roto-def-card h2 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--pink-light); margin-bottom: 0.7rem; }
   .roto-def-card p { font-family: 'Times New Roman', Times, serif; font-size: 0.93rem; color: var(--pink-light); line-height: 1.8; }
 
   footer { border-top: 0.5px solid var(--border); padding: 1.8rem 3rem; max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
@@ -353,18 +358,18 @@
       <span class="section-label">Selected Projects</span>
     </div>
     <div class="projects-grid">
-      <div class="project-card" role="button" tabindex="0" onclick="showPage('solar')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showPage('solar')}">
+      <div class="project-card" onclick="showPage('solar')">
         <div class="card-line"></div>
         <span class="card-icon">🪐</span>
-        <h2 class="card-title">3D Solar System</h2>
+        <h2 class="card-title"><a href="javascript:void(0)" onclick="event.stopPropagation();showPage('solar')" style="color:inherit;text-decoration:none;">3D Solar System</a></h2>
         <p class="card-desc">A fully rendered 3D model of the solar system built in Blender, complete with an age calculator that tells you how old you are on every planet.</p>
         <div class="card-tags"><span class="tag">Blender</span><span class="tag">3D Modeling</span><span class="tag">Interactive</span></div>
         <span class="card-arrow">↗</span>
       </div>
-      <div class="project-card" role="button" tabindex="0" onclick="showPage('roto')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showPage('roto')}">
+      <div class="project-card" onclick="showPage('roto')">
         <div class="card-line"></div>
         <span class="card-icon">🎬</span>
-        <h2 class="card-title">1-Min Rotoscope</h2>
+        <h2 class="card-title"><a href="javascript:void(0)" onclick="event.stopPropagation();showPage('roto')" style="color:inherit;text-decoration:none;">1-Min Rotoscope</a></h2>
         <p class="card-desc">A one-minute animated video created using the rotoscoping technique in Adobe After Effects, combining video, audio, and frame-by-frame tracing.</p>
         <div class="card-tags"><span class="tag">After Effects</span><span class="tag">Rotoscoping</span><span class="tag">Animation</span></div>
         <span class="card-arrow">↗</span>
@@ -510,19 +515,19 @@
 
     <div class="roto-info-grid">
       <div class="roto-def-card">
-        <h4>What is Rotoscoping?</h4>
+        <h2>What is Rotoscoping?</h2>
         <p>Rotoscoping is an animation technique where animators trace over live action footage frame by frame to produce realistic movement. The result is a hand drawn animation that follows the natural motion of real subjects.</p>
       </div>
       <div class="roto-def-card">
-        <h4>What is Adobe After Effects?</h4>
+        <h2>What is Adobe After Effects?</h2>
         <p>Adobe After Effects is a professional motion graphics and visual effects software. It was used in this project to apply the rotoscoping technique, add visual effects, and combine all audio and video elements into the final output.</p>
       </div>
       <div class="roto-def-card">
-        <h4>About this project</h4>
+        <h2>About this project</h2>
         <p>This 1-minute rotoscope animation combines original video footage, music, and text. Each frame was carefully traced and styled to create a smooth, stylized animation that tells a visual story.</p>
       </div>
       <div class="roto-def-card">
-        <h4>What did I learn?</h4>
+        <h2>What did I learn?</h2>
         <p>This project taught me how to use Adobe After Effects for frame-by-frame animation, how to sync audio with visuals, and how rotoscoping bridges the gap between live-action and animation.</p>
       </div>
     </div>
@@ -533,14 +538,14 @@
     </div>
     <div class="steps-box">
       <div class="steps-grid">
-        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Choose a Video</h4><p class="step-desc">Select a video clip that you want to rotoscope. Pick something with clear, distinct movement and a subject that stands out from the background.</p></div></div>
-        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Cut to Your Desired Length</h4><p class="step-desc">The chosen video is 1 minute long. It was divided into parts across 12 weeks so that each week only a small portion needed to be traced and rendered, making the process much more manageable.</p></div></div>
-        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Import into After Effects</h4><p class="step-desc">Open Adobe After Effects and import your trimmed video clip into a new composition. Set up your canvas size and frame rate to match the original footage.</p></div></div>
-        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Trace Frame by Frame</h4><p class="step-desc">Using the pen tool, trace the outline of your subject on every single frame. Each frame is drawn individually to follow the natural movement of the subject.</p></div></div>
-        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Fill with Color</h4><p class="step-desc">Once the outlines are complete, fill each traced shape with your chosen colors. You can use flat colors, gradients, or stylized shading to give your animation a unique look.</p></div></div>
-        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Add Background &amp; Effects</h4><p class="step-desc">Replace or stylize the background to complement your animation. Add visual effects, transitions, or overlays in After Effects to enhance the overall look.</p></div></div>
-        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Sync Audio</h4><p class="step-desc">Add music or sound effects and sync them with the animation. Adjust timing so the audio matches the movement and mood of the rotoscoped visuals.</p></div></div>
-        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h4 class="step-title">Export the Final Output</h4><p class="step-desc">Once everything is polished, render and export your animation using Adobe Media Encoder. Export as an MP4 file for web use.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h3 class="step-title">Choose a Video</h3><p class="step-desc">Select a video clip that you want to rotoscope. Pick something with clear, distinct movement and a subject that stands out from the background.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h3 class="step-title">Cut to Your Desired Length</h3><p class="step-desc">The chosen video is 1 minute long. It was divided into parts across 12 weeks so that each week only a small portion needed to be traced and rendered, making the process much more manageable.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h3 class="step-title">Import into After Effects</h3><p class="step-desc">Open Adobe After Effects and import your trimmed video clip into a new composition. Set up your canvas size and frame rate to match the original footage.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h3 class="step-title">Trace Frame by Frame</h3><p class="step-desc">Using the pen tool, trace the outline of your subject on every single frame. Each frame is drawn individually to follow the natural movement of the subject.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h3 class="step-title">Fill with Color</h3><p class="step-desc">Once the outlines are complete, fill each traced shape with your chosen colors. You can use flat colors, gradients, or stylized shading to give your animation a unique look.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h3 class="step-title">Add Background &amp; Effects</h3><p class="step-desc">Replace or stylize the background to complement your animation. Add visual effects, transitions, or overlays in After Effects to enhance the overall look.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h3 class="step-title">Sync Audio</h3><p class="step-desc">Add music or sound effects and sync them with the animation. Adjust timing so the audio matches the movement and mood of the rotoscoped visuals.</p></div></div>
+        <div class="step-item"><span class="step-bullet">✦</span><div class="step-body"><h3 class="step-title">Export the Final Output</h3><p class="step-desc">Once everything is polished, render and export your animation using Adobe Media Encoder. Export as an MP4 file for web use.</p></div></div>
       </div>
     </div>
 
