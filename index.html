@@ -176,7 +176,7 @@
 
   .solar-info { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
   .solar-def-card { position: relative; padding: 2rem 2rem 2rem 1.8rem; background: linear-gradient(135deg, rgba(255,110,180,0.06) 0%, rgba(3,0,10,0) 60%); border: 0.5px solid rgba(255,110,180,0.18); border-left: 2px solid var(--pink); overflow: hidden; }
-  .solar-def-card h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--pink-light); margin-bottom: 0.7rem; }
+  .solar-def-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--pink-light); margin-bottom: 0.7rem; }
   .solar-def-card p { font-family: 'Times New Roman', Times, serif; font-size: 0.93rem; color: var(--pink-light); line-height: 1.8; }
 
   .steps-box { background: linear-gradient(135deg, rgba(255,110,180,0.06) 0%, rgba(13,0,9,0) 70%); border: 0.5px solid rgba(255,110,180,0.2); border-top: 2px solid var(--pink); padding: 2rem 2.2rem; margin-bottom: 3rem; }
@@ -340,11 +340,11 @@
   </section>
   <div class="definitions">
     <div class="def-block">
-      <h3 class="def-heading">What is <em>Multimedia?</em></h3>
+      <h2 class="def-heading">What is <em>Multimedia?</em></h2>
       <p class="def-body">Multimedia is the combination of two or more media types such as text, images, audio, video, and animation delivered through a digital device. It allows creators to communicate ideas in richer, more engaging ways than a single medium can.</p>
     </div>
     <div class="def-block">
-      <h3 class="def-heading">What is <em>Authoring?</em></h3>
+      <h2 class="def-heading">What is <em>Authoring?</em></h2>
       <p class="def-body">Authoring in multimedia refers to the process of creating and combining different media elements using specialized software called authoring tools. It involves designing, assembling, and publishing interactive multimedia content.</p>
     </div>
   </div>
@@ -353,22 +353,22 @@
       <span class="section-label">Selected Projects</span>
     </div>
     <div class="projects-grid">
-      <button class="project-card" onclick="showPage('solar')">
+      <div class="project-card" role="button" tabindex="0" onclick="showPage('solar')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showPage('solar')}">
         <div class="card-line"></div>
         <span class="card-icon">🪐</span>
         <h2 class="card-title">3D Solar System</h2>
         <p class="card-desc">A fully rendered 3D model of the solar system built in Blender, complete with an age calculator that tells you how old you are on every planet.</p>
         <div class="card-tags"><span class="tag">Blender</span><span class="tag">3D Modeling</span><span class="tag">Interactive</span></div>
         <span class="card-arrow">↗</span>
-      </button>
-      <button class="project-card" onclick="showPage('roto')">
+      </div>
+      <div class="project-card" role="button" tabindex="0" onclick="showPage('roto')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showPage('roto')}">
         <div class="card-line"></div>
         <span class="card-icon">🎬</span>
         <h2 class="card-title">1-Min Rotoscope</h2>
         <p class="card-desc">A one-minute animated video created using the rotoscoping technique in Adobe After Effects, combining video, audio, and frame-by-frame tracing.</p>
         <div class="card-tags"><span class="tag">After Effects</span><span class="tag">Rotoscoping</span><span class="tag">Animation</span></div>
         <span class="card-arrow">↗</span>
-      </button>
+      </div>
     </div>
   </section>
   <footer><p>© 2025–2026 Carla Cervantes</p><div class="footer-dot"></div><p>Multimedia &amp; Authoring</p></footer>
@@ -383,17 +383,17 @@
 
     <div class="system-overview-wrap">
       <video autoplay muted loop playsinline>
-        <source src="solar/solar final.webm" type="video/webm">
+        <source src="solar/solar%20final.webm" type="video/webm">
         Your browser does not support the video tag.
       </video>
     </div>
 
     <div class="calc-section">
-      <h3 class="calc-section-title">Planet Age <em>Calculator</em></h3>
+      <h2 class="calc-section-title">Planet Age <em>Calculator</em></h2>
       <p class="calc-desc">Each planet orbits the Sun at a different speed. Enter your Earth age below to find out how old you would be on every planet  and discover a fun fact about each one.</p>
       <div class="calc-input-row">
         <span class="calc-input-label">Your age on Earth</span>
-        <input class="calc-input" type="number" id="ageInput" min="1" max="120" placeholder="e.g. 18" />
+        <input class="calc-input" type="number" id="ageInput" min="1" max="120" placeholder="e.g. 18">
         <button class="calc-btn" onclick="calculateAges()">Calculate</button>
       </div>
       <div class="planets-grid" id="planetsGrid"></div>
@@ -412,19 +412,19 @@
 
     <div class="solar-info">
       <div class="solar-def-card">
-        <h4>What is 3D Modeling?</h4>
+        <h3>What is 3D Modeling?</h3>
         <p>3D modeling is the process of creating a three-dimensional representation of an object using specialized software. In this project, each planet was modeled and textured in Blender to replicate the look of our solar system.</p>
       </div>
       <div class="solar-def-card">
-        <h4>What is Blender?</h4>
+        <h3>What is Blender?</h3>
         <p>Blender is a free and open-source 3D creation tool that supports modeling, animation, rendering, and more. It was used to build and animate all the planets in this project with realistic materials and lighting.</p>
       </div>
       <div class="solar-def-card">
-        <h4>The Age Calculator</h4>
+        <h3>The Age Calculator</h3>
         <p>Each planet takes a different amount of time to orbit the Sun. By entering your age on Earth, the calculator converts it into your equivalent age on every other planet based on their orbital periods.</p>
       </div>
       <div class="solar-def-card">
-        <h4>What did I learn?</h4>
+        <h3>What did I learn?</h3>
         <p>Through this project I learned how to navigate Blender, apply textures and lighting to 3D objects, and combine interactive elements with visual design to create an engaging multimedia experience.</p>
       </div>
     </div>
@@ -472,7 +472,7 @@
         <span class="roto-compare-label">Rotoscoped Output</span>
         <div class="roto-video-wrap">
           <video id="rotoVid" muted>
-            <source src="videos/final output.mp4" type="video/mp4">
+            <source src="videos/final%20output.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
           <button class="audio-toggle" onclick="toggleMute('rotoVid', this)">
@@ -494,18 +494,18 @@
       <span class="weekly-title-line"></span>
     </div>
     <div class="weekly-grid">
-      <div class="weekly-item"><span class="weekly-label">Week 1</span><video controls><source src="videos/WEEK 1.mp4" type="video/mp4"></video></div>
-      <div class="weekly-item"><span class="weekly-label">Week 2</span><video controls><source src="videos/WEEK 2.mp4" type="video/mp4"></video></div>
-      <div class="weekly-item"><span class="weekly-label">Week 3</span><video controls><source src="videos/WEEK 3.mp4" type="video/mp4"></video></div>
-      <div class="weekly-item"><span class="weekly-label">Week 4</span><video controls><source src="videos/WEEK 4.mp4" type="video/mp4"></video></div>
-      <div class="weekly-item"><span class="weekly-label">Week 5</span><video controls><source src="videos/WEEK 5.mp4" type="video/mp4"></video></div>
-      <div class="weekly-item"><span class="weekly-label">Week 6</span><video controls><source src="videos/WEEK 6.mp4" type="video/mp4"></video></div>
-      <div class="weekly-item"><span class="weekly-label">Week 7</span><video controls><source src="videos/WEEK 7.mp4" type="video/mp4"></video></div>
-      <div class="weekly-item"><span class="weekly-label">Week 8</span><video controls><source src="videos/WEEK 8.mp4" type="video/mp4"></video></div>
-      <div class="weekly-item"><span class="weekly-label">Week 9</span><video controls><source src="videos/WEEK 9.mp4" type="video/mp4"></video></div>
-      <div class="weekly-item"><span class="weekly-label">Week 10</span><video controls><source src="videos/WEEK 10.mp4" type="video/mp4"></video></div>
-      <div class="weekly-item"><span class="weekly-label">Week 11</span><video controls><source src="videos/WEEK 11.mp4" type="video/mp4"></video></div>
-      <div class="weekly-item"><span class="weekly-label">Week 12</span><video controls><source src="videos/WEEK 12.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 1</span><video controls><source src="videos/WEEK%201.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 2</span><video controls><source src="videos/WEEK%202.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 3</span><video controls><source src="videos/WEEK%203.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 4</span><video controls><source src="videos/WEEK%204.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 5</span><video controls><source src="videos/WEEK%205.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 6</span><video controls><source src="videos/WEEK%206.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 7</span><video controls><source src="videos/WEEK%207.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 8</span><video controls><source src="videos/WEEK%208.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 9</span><video controls><source src="videos/WEEK%209.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 10</span><video controls><source src="videos/WEEK%2010.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 11</span><video controls><source src="videos/WEEK%2011.mp4" type="video/mp4"></video></div>
+      <div class="weekly-item"><span class="weekly-label">Week 12</span><video controls><source src="videos/WEEK%2012.mp4" type="video/mp4"></video></div>
     </div>
 
     <div class="roto-info-grid">
@@ -568,12 +568,12 @@ function renderGrid(age) {
     const media = p.vid
       ? `<video src="${p.vid}" autoplay muted loop playsinline style="width:90px;height:90px;object-fit:cover;border-radius:50%;display:block;"></video>`
       : `<img src="${p.img}" alt="${p.name}" style="width:75px;height:75px;object-fit:contain;display:block;">`;
-    return `<button class="planet-tile" onclick="showFact(${i})" id="ptile-${i}">
+    return `<div class="planet-tile" role="button" tabindex="0" onclick="showFact(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showFact(${i})}" id="ptile-${i}">
       <div class="planet-img-wrap">${media}</div>
       <span class="planet-name">${p.name}</span>
       <span class="planet-age-val">${ageVal}</span>
       <span class="planet-dist">${p.dist} from Sun</span>
-    </button>`;
+    </div>`;
   }).join('');
 }
 
